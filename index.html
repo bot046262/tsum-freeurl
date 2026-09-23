@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <titleブックマークページ</title>
+  <!-- ★タブのタイトル（ここを自由に変更できます） -->
+  <title>学校ポータルサイト</title>
   <style>
     :root {
       --bg-color: #f8fafc;
@@ -112,9 +113,9 @@
     <div class="admin-bar-inner">
       <span>🔒 <strong>管理モード編集中</strong>（編集後に「全員に更新を反映」を押します）</span>
       <div style="display:flex; gap:8px;">
-        <button class="btn btn-primary" onclick="publishToAll()">全員に更新を反映</button>
-        <button class="btn" onclick="openPasswordModal()">パスワード変更</button>
-        
+        <button class="btn btn-primary" onclick="publishToAll()">🚀 全員に更新を反映</button>
+        <button class="btn" onclick="openPasswordModal()">🔑 パスワード変更</button>
+        <button class="btn btn-danger" onclick="resetToDefault()">🔄 初期データに戻す</button>
       </div>
     </div>
   </div>
@@ -124,7 +125,24 @@
     <div id="emptySearch" class="empty-search">該当するリンクが見つかりません。</div>
   </main>
 
-  <!-- モーダル各種 -->
+  <!-- ★ 追加：アクセス用4桁パスワード認証モーダル -->
+  <div class="modal-overlay" id="siteAuthModal">
+    <div class="modal">
+      <div class="modal-header">🔒 サイトアクセス認証</div>
+      <form onsubmit="handleSiteAuthSubmit(event)">
+        <div class="form-group">
+          <label class="form-label">アクセス用パスワード（4桁の数字）を入力してください</label>
+          <input type="password" id="sitePasswordInput" class="form-input" maxlength="4" pattern="\d{4}" placeholder="1234" required autofocus inputmode="numeric">
+          <div id="siteAuthError" class="password-error">パスワードが間違っています</div>
+        </div>
+        <div class="modal-actions">
+          <button type="submit" class="btn btn-primary">認証して開く</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 管理者認証モーダル -->
   <div class="modal-overlay" id="authModal">
     <div class="modal">
       <div class="modal-header">管理者認証</div>
@@ -134,7 +152,7 @@
           <input type="password" id="authPassword" class="form-input" required autofocus>
           <div id="authError" class="password-error">パスワードが違います</div>
         </div>
-        <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">: <code></code></div>
+        <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">初期パスワード: <code>admin123</code></div>
         <div class="modal-actions">
           <button type="button" class="btn" onclick="closeAuthModal()">キャンセル</button>
           <button type="submit" class="btn btn-primary">認証</button>
@@ -172,7 +190,7 @@
         <input type="hidden" id="cardLinkIndex">
         <div class="form-group">
           <label class="form-label">タイトル</label>
-          <input type="text" id="cardTitleInput" class="form-input" required placeholder="例: タイピング">
+          <input type="text" id="cardTitleInput" class="form-input" required placeholder="例: ミライシード">
         </div>
         <div class="form-group">
           <label class="form-label">URL</label>
@@ -200,15 +218,41 @@
 
   <script>
     // ----------------------------------------------------
-    // ★ Supabaseの設定（ご自身のプロジェクトの値に書き換えてください）
+    // ★ 1. 初回アクセス用 4桁パスワード設定（お好みの数字に変更可能）
+    // ----------------------------------------------------
+    const SITE_PASS = "1234";
+
+    function checkSiteAuth() {
+      const isAuth = localStorage.getItem("site_authenticated");
+      const modal = document.getElementById("siteAuthModal");
+      if (isAuth === "true") {
+        modal.classList.remove("active");
+      } else {
+        modal.classList.add("active");
+      }
+    }
+
+    function handleSiteAuthSubmit(e) {
+      e.preventDefault();
+      const inputPass = document.getElementById("sitePasswordInput").value;
+      if (inputPass === SITE_PASS) {
+        localStorage.setItem("site_authenticated", "true");
+        document.getElementById("siteAuthModal").classList.remove("active");
+      } else {
+        document.getElementById("siteAuthError").style.display = "block";
+      }
+    }
+
+    // ----------------------------------------------------
+    // ★ 2. Supabaseの設定（修正済み）
     // ----------------------------------------------------
     const SUPABASE_URL = "https://fhlmyrgqkglbewpcuvys.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_4bhgB9RdwGVsij7K48bkxg_p-L8Ma4t";
 
     let supabaseClient = null;
     if (SUPABASE_URL && SUPABASE_ANON_KEY) {
-    supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-}
+      supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    }
 
     const ICONS = {
       globe: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>`,
@@ -261,7 +305,6 @@
     let isAdmin = false;
     let adminPassword = localStorage.getItem("portal_admin_pw") || "admin123";
 
-    // --- 安全にJSONパースする処理 ---
     function parseData(rawData) {
       if (!rawData) return DEFAULT_DATA;
       if (typeof rawData === "string") {
@@ -272,7 +315,6 @@
 
     async function init() {
       if (supabaseClient) {
-        // 初回ロード（キャッシュ回避のため即時取得）
         const { data, error } = await supabaseClient.from('portal_settings').select('data').eq('id', 1).maybeSingle();
         if (data && data.data) {
           siteData = parseData(data.data);
@@ -281,7 +323,6 @@
         }
         render();
 
-        // リアルタイム同期監視（修正箇所：全イベントを検知）
         supabaseClient
           .channel('schema-db-changes')
           .on(
@@ -300,15 +341,16 @@
         siteData = savedData ? JSON.parse(savedData) : DEFAULT_DATA;
         render();
       }
+
+      checkSiteAuth();
     }
 
     async function publishToAll() {
       if (!supabaseClient) {
-        alert("Supabaseの設定が完了していません。SUPABASE_URL と SUPABASE_ANON_KEY を設定してください。");
+        alert("Supabaseの設定が完了していません。");
         return;
       }
 
-      // Upsert実行
       const { error } = await supabaseClient.from('portal_settings').upsert({
         id: 1,
         data: siteData
