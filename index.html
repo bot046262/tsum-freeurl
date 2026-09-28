@@ -163,9 +163,8 @@
     <div class="admin-bar-inner">
       <span>🔒 <strong>管理モード編集中</strong>（編集後に「全員に更新を反映」を押します）</span>
       <div style="display:flex; gap:8px;">
-        <button class="btn btn-primary" onclick="publishToAll()">🚀 全員に更新を反映</button>
-        <button class="btn" onclick="openPasswordModal()">🔑 パスワード変更</button>
-        <button class="btn btn-danger" onclick="resetToDefault()">🔄 初期データに戻す</button>
+        <button class="btn btn-primary" onclick="publishToAll()"> 全員に更新を反映</button>
+        <button class="btn" onclick="openPasswordModal()"> パスワード変更</button>
       </div>
     </div>
   </div>
@@ -202,7 +201,7 @@
           <input type="password" id="authPassword" class="form-input" required autofocus>
           <div id="authError" class="password-error">パスワードが違います</div>
         </div>
-        <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">初期パスワード: <code>admin123</code></div>
+        <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;"><code></code></div>
         <div class="modal-actions">
           <button type="button" class="btn" onclick="closeAuthModal()">キャンセル</button>
           <button type="submit" class="btn btn-primary">認証</button>
@@ -249,12 +248,12 @@
         <div class="form-group">
           <label class="form-label">アイコン</label>
           <select id="cardIconSelect" class="form-select">
-            <option value="globe">🌐 地球儀 (Webサイト)</option>
-            <option value="pen">✏️ ペン (アンケート・記述)</option>
-            <option value="doc">📄 書類 (教材・ドキュメント)</option>
-            <option value="video">📺 動画 (NHK・映像)</option>
-            <option value="book">📚 本 (図書・読書)</option>
-            <option value="search">🔍 検索 (調べ学習・統計)</option>
+            <option value="globe">🌐 地球儀 </option>
+            <option value="pen">✏️ ペン </option>
+            <option value="doc">📄 書類 </option>
+            <option value="video">📺 動画 </option>
+            <option value="book">📚 本 </option>
+            <option value="search">🔍 検索 </option>
             <option value="star">⭐ お気に入り</option>
           </select>
         </div>
