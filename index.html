@@ -181,7 +181,7 @@
       <form onsubmit="handleSiteAuthSubmit(event)">
         <div class="form-group">
           <label class="form-label">アクセス用パスワード（4桁の数字）を入力してください</label>
-          <input type="password" id="sitePasswordInput" class="form-input" maxlength="4" pattern="\d{4}" placeholder="1234" required autofocus inputmode="numeric">
+          <input type="password" id="sitePasswordInput" class="form-input" maxlength="4" pattern="\d{4}" placeholder="" required autofocus inputmode="numeric">
           <div id="siteAuthError" class="password-error">パスワードが間違っています</div>
         </div>
         <div class="modal-actions">
@@ -239,7 +239,7 @@
         <input type="hidden" id="cardLinkIndex">
         <div class="form-group">
           <label class="form-label">タイトル</label>
-          <input type="text" id="cardTitleInput" class="form-input" required placeholder="例: ミライシード">
+          <input type="text" id="cardTitleInput" class="form-input" required placeholder="例: 〇〇公式サイト">
         </div>
         <div class="form-group">
           <label class="form-label">URL</label>
@@ -325,38 +325,38 @@
 
     const DEFAULT_DATA = [
       {
-        title: "学習・教材",
+        title: "",
         links: [
-          { title: "Jモラルポータル", url: "#", icon: "doc" },
-          { title: "英語新教材", url: "#", icon: "doc" },
-          { title: "振り返り学習教材", url: "#", icon: "doc" },
-          { title: "ミライシード", url: "#", icon: "globe" },
-          { title: "クラウドログイン", url: "#", icon: "globe" }
+          { title: "", url: "#", icon: "doc" },
+          { title: "", url: "#", icon: "doc" },
+          { title: "", url: "#", icon: "doc" },
+          { title: "", url: "#", icon: "globe" },
+          { title: "", url: "#", icon: "globe" }
         ]
       },
       {
-        title: "キャリア教育",
+        title: "",
         links: [
-          { title: "おしごとナビ", url: "#", icon: "globe" },
-          { title: "未来の仕事 | 学研キッズネット", url: "#", icon: "globe" },
-          { title: "【職業一覧】なるにはナビ", url: "#", icon: "globe" }
+          { title: "", url: "#", icon: "globe" },
+          { title: "", url: "#", icon: "globe" },
+          { title: "", url: "#", icon: "globe" }
         ]
       },
       {
-        title: "画像・動画教材",
+        title: "",
         links: [
-          { title: "動画等教材", url: "#", icon: "doc" },
-          { title: "NHK for School", url: "#", icon: "video" },
-          { title: "NHK動画", url: "#", icon: "video" }
+          { title: "", url: "#", icon: "doc" },
+          { title: "", url: "#", icon: "video" },
+          { title: "", url: "#", icon: "video" }
         ]
       },
       {
-        title: "図書館蔵書検索",
-        links: [{ title: "校内図書館蔵書検索", url: "#", icon: "book" }]
+        title: "",
+        links: [{ title: "", url: "#", icon: "book" }]
       },
       {
-        title: "調べ学習",
-        links: [{ title: "キッズすたっと～探そう統計データ～", url: "#", icon: "search" }]
+        title: "",
+        links: [{ title: "", url: "#", icon: "search" }]
       }
     ];
 
